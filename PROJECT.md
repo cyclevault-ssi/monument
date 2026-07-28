@@ -21,18 +21,38 @@
 - **Open:** [One consequential question.]
 - **Last evidence:** [What ran, result, and what it did not prove.]
 - **Next human gate:** [The exact review or approval required.]
+## Document authority
+- **`PROJECT.md` defines it:** intent, current truth, boundaries, and human gates.
+- **`docs/DESIGN.md` shapes it:** experience, capabilities, interfaces, data,
+  failure behavior, recovery, and explicit non-designs.
+- **`docs/PLAN.md` sequences it:** dependencies, construction order, bounded
+  work, acceptance gates, rollback, and stop conditions.
+- **`docs/EVIDENCE.md` proves it:** named claims, results, limits, dates,
+  versions or hashes, and what remains unproven.
+
+`DESIGN.md` may elaborate but never overrule `PROJECT.md`. `PLAN.md` may not
+silently invent design. `EVIDENCE.md` may not redefine the requirement it
+tests.
+
+Add `docs/decisions/`, `docs/research/`, `docs/runbooks/`, `SECURITY.md`, or
+`CHANGELOG.md` only when the project actually needs them.
+
 ## Suggested structure
-Start with only these two Markdown files. Split material out when it becomes
-hard to scan:
+Keep the core authorities brief and split supporting material only when it
+becomes difficult to scan:
 
 ```text
 project/
-├── BUILD-RULES.md
 ├── PROJECT.md
+├── AGENTS.md
+├── BUILD-RULES.md
 ├── docs/
+│   ├── DESIGN.md
+│   ├── PLAN.md
+│   ├── EVIDENCE.md
 │   ├── decisions/
-│   ├── plans/
-│   └── evidence/
+│   ├── research/
+│   └── runbooks/
 ├── src/
 ├── tests/
 └── README.md
