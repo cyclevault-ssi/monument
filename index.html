@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The Monument Method: a portable Markdown contract for human-directed, evidence-bound work.">
+  <title>The Monument Method</title>
+  <style>
+    :root {
+      --ink: #173427;
+      --ink-soft: #496454;
+      --paper: #fff9e9;
+      --paper-strong: #fffdf5;
+      --line: #c8c4a5;
+      --moss: #24583a;
+      --moss-dark: #123622;
+      --sun: #f4a441;
+      --sun-light: #ffd28a;
+      --coral: #ec6b53;
+      --shadow: 0 18px 50px rgb(22 52 38 / 18%);
+      --mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color-scheme: light;
+      scroll-behavior: smooth;
+      background: var(--moss-dark);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        linear-gradient(rgb(7 52 29 / 76%), rgb(7 52 29 / 89%)),
+        url("assets/monument-grass-continuation.png") top center / 960px auto repeat;
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    :focus-visible {
+      outline: 3px solid var(--sun);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      transform: translateY(-160%);
+      border-radius: 8px;
+      color: white;
+      background: var(--moss-dark);
+    }
+
+    .skip-link:focus { transform: none; }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: min(780px, 90svh);
+      overflow: hidden;
+      color: #fffbe9;
+      background:
+        linear-gradient(180deg, rgb(10 34 45 / 8%) 0%, rgb(11 47 31 / 8%) 54%, rgb(7 38 21 / 92%) 100%),
+        url("assets/monument-hero.jpg") center / cover no-repeat;
+      image-rendering: auto;
+    }
+
+    .hero::after {
+      position: absolute;
+      inset: auto 0 0;
+      height: 44%;
+      content: "";
+      pointer-events: none;
+      background: linear-gradient(transparent, #0a321f);
+    }
+
+    .hero-inner {
+      z-index: 1;
+      display: grid;
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 72px;
+      align-content: space-between;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 18px rgb(0 0 0 / 45%);
+    }
+
+    .identity { opacity: 0.9; }
+
+    .hero-copy {
+      width: min(830px, 100%);
+      padding-top: 120px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--sun-light);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(3.2rem, 9vw, 7.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.068em;
+      text-wrap: balance;
+      text-shadow: 0 5px 0 rgb(30 64 35 / 48%), 0 12px 35px rgb(0 0 0 / 36%);
+    }
+
+    .subtitle {
+      margin: 24px 0 0;
+      font-size: clamp(1.18rem, 2.3vw, 1.75rem);
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      text-shadow: 0 3px 20px rgb(0 0 0 / 45%);
+    }
+
+    .mantra {
+      max-width: 790px;
+      margin: 28px 0 0;
+      padding-left: 18px;
+      border-left: 5px solid var(--sun);
+      font-family: var(--mono);
+      font-size: clamp(0.9rem, 1.4vw, 1.08rem);
+      line-height: 1.65;
+      text-shadow: 0 2px 16px rgb(0 0 0 / 55%);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border: 2px solid rgb(255 255 255 / 50%);
+      border-radius: 10px;
+      color: #fffdf3;
+      font-size: 0.9rem;
+      font-weight: 850;
+      text-decoration: none;
+      background: rgb(10 45 28 / 72%);
+      box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+
+    .button.primary {
+      border-color: var(--sun);
+      color: #183527;
+      background: var(--sun-light);
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button.pending { cursor: default; opacity: 0.72; }
+    .button.pending:hover { transform: none; }
+
+    main {
+      position: relative;
+      z-index: 2;
+      width: min(1160px, calc(100% - 32px));
+      margin: -28px auto 0;
+      padding-bottom: 72px;
+    }
+
+    .panel {
+      border: 2px solid rgb(255 255 255 / 34%);
+      border-radius: 20px;
+      background: rgb(255 249 233 / 97%);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 42px;
+      padding: clamp(28px, 5vw, 58px);
+    }
+
+    .section-label {
+      margin: 0 0 12px;
+      color: var(--coral);
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 20px 0 0;
+      color: var(--ink-soft);
+      font-size: 1.06rem;
+      line-height: 1.72;
+    }
+
+    .protocol {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding: 24px;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper-strong);
+    }
+
+    .protocol strong {
+      font-family: var(--mono);
+      font-size: clamp(0.92rem, 1.7vw, 1.08rem);
+      line-height: 1.7;
+    }
+
+    .protocol p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .file-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 22px 0 44px;
+    }
+
+    .file-nav a {
+      display: grid;
+      min-height: 98px;
+      padding: 18px;
+      border: 2px solid rgb(255 255 255 / 38%);
+      border-radius: 14px;
+      color: #fffbe9;
+      text-decoration: none;
+      background: rgb(10 50 31 / 88%);
+      box-shadow: var(--shadow);
+    }
+
+    .file-nav span {
+      color: var(--sun-light);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .file-nav strong {
+      align-self: end;
+      font-size: 1.02rem;
+    }
+
+    .document {
+      margin-top: 22px;
+      overflow: hidden;
+    }
+
+    .document-head {
+      position: sticky;
+      z-index: 4;
+      top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 22px;
+      border-bottom: 2px solid var(--line);
+      background: rgb(255 249 233 / 96%);
+      backdrop-filter: blur(12px);
+    }
+
+    .document-title {
+      min-width: 0;
+    }
+
+    .document-title p {
+      margin: 0 0 5px;
+      color: var(--coral);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .document-title h3 {
+      overflow: hidden;
+      margin: 0;
+      font-family: var(--mono);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .document-title .scroll-hint {
+      margin: 7px 0 0;
+      color: var(--moss);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+    }
+
+    .document-actions {
+      display: flex;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .small-button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 13px;
+      border: 2px solid var(--moss);
+      border-radius: 8px;
+      color: var(--moss-dark);
+      font: 800 0.78rem var(--sans);
+      text-decoration: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .small-button.copy {
+      color: white;
+      background: var(--moss);
+    }
+
+    .small-button[data-state="copied"] {
+      border-color: var(--coral);
+      background: var(--coral);
+    }
+
+    pre {
+      height: clamp(280px, 40vh, 450px);
+      margin: 0;
+      padding: clamp(20px, 4vw, 42px);
+      overflow: auto;
+      overflow-wrap: anywhere;
+      scrollbar-color: var(--coral) #eadfc4;
+      scrollbar-width: auto;
+      color: #1d382b;
+      font: 0.88rem/1.72 var(--mono);
+      tab-size: 2;
+      white-space: pre-wrap;
+      background: var(--paper-strong);
+    }
+
+    pre::-webkit-scrollbar { width: 14px; }
+    pre::-webkit-scrollbar-track { background: #eadfc4; }
+    pre::-webkit-scrollbar-thumb {
+      border: 3px solid #eadfc4;
+      border-radius: 999px;
+      background: var(--coral);
+    }
+
+    .loading {
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .closing {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 44px;
+      padding: clamp(28px, 5vw, 52px);
+    }
+
+    .closing h2 { font-size: clamp(1.8rem, 3.4vw, 2.8rem); }
+    .closing p { color: var(--ink-soft); line-height: 1.7; }
+
+    .license-note {
+      padding: 22px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper-strong);
+    }
+
+    footer {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 54px;
+      color: rgb(255 253 240 / 72%);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .hero { min-height: 720px; }
+      .hero-inner { width: min(100% - 28px, 1160px); padding-top: 22px; }
+      .brand-row { align-items: flex-start; flex-direction: column; gap: 6px; font-size: 0.66rem; }
+      .identity { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+      .hero-copy { padding-top: 76px; }
+      .intro, .closing { grid-template-columns: 1fr; gap: 24px; }
+      .file-nav { grid-template-columns: 1fr; }
+      .file-nav a { min-height: 76px; }
+      .document-head { position: static; align-items: flex-start; flex-direction: column; }
+      .document-actions { width: 100%; }
+      .small-button { flex: 1; }
+      pre { font-size: 0.78rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+      .button:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the method</a>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand-row">
+        <span>Monument / v1 seed</span>
+        <span class="identity">CycleVault.ai × SolidStateIntelligence.ai</span>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">A portable planning standard</p>
+        <h1>The Monument Method</h1>
+        <p class="subtitle">The work becomes a reusable method.</p>
+        <p class="mantra">Markdown is the contract. Hashes bind it. Code serves it. Evidence proves only the named claim. Stop on drift. The human reviews, approves, and opens the next gate.</p>
+        <div class="actions">
+          <a class="button primary" href="#project-template">Read the method</a>
+          <span class="button pending" aria-disabled="true">GitHub after review</span>
+          <a class="button" href="monument-starter.zip" download>Download ZIP</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="panel intro" aria-labelledby="start-title">
+      <div>
+        <p class="section-label">Start small</p>
+        <h2 id="start-title">Two files. One bounded target. One human gate.</h2>
+        <p class="lede">Put the rules and project contract beside your work. Fill in the current truth, choose one concrete result, and let the documents grow only when the project becomes difficult to scan.</p>
+      </div>
+      <div class="protocol">
+        <span class="section-label">Working protocol</span>
+        <strong>READ → BIND → BUILD → PROVE → REVIEW</strong>
+        <p>The method keeps product intent, implementation, evidence, and approval distinct. Detail alone is never proof.</p>
+      </div>
+    </section>
+
+    <nav class="file-nav" aria-label="Files on this page">
+      <a href="#project-template"><span>01 / living contract</span><strong>PROJECT.md</strong></a>
+      <a href="#agent-pointer"><span>02 / project-focused pointer</span><strong>AGENTS.md</strong></a>
+      <a href="#build-rules"><span>03 / stable rules</span><strong>BUILD-RULES.md</strong></a>
+    </nav>
+
+    <section class="panel document" id="project-template" data-document="PROJECT.md">
+      <div class="document-head">
+        <div class="document-title">
+          <p>Full text / living contract</p>
+          <h3>PROJECT.md</h3>
+          <p class="scroll-hint">Scroll full text ↓</p>
+        </div>
+        <div class="document-actions">
+          <button class="small-button copy" type="button" data-copy="PROJECT.md">Copy full text</button>
+          <a class="small-button" href="PROJECT.md" download>Download .md</a>
+        </div>
+      </div>
+      <pre><code class="loading" data-source="PROJECT.md">Loading full text…</code></pre>
+    </section>
+
+    <section class="panel document" id="agent-pointer" data-document="AGENTS.md">
+      <div class="document-head">
+        <div class="document-title">
+          <p>Full text / project-focused pointer</p>
+          <h3>AGENTS.md</h3>
+          <p class="scroll-hint">Scroll full text ↓</p>
+        </div>
+        <div class="document-actions">
+          <button class="small-button copy" type="button" data-copy="AGENTS.md">Copy full text</button>
+          <a class="small-button" href="AGENTS.md" download>Download .md</a>
+        </div>
+      </div>
+      <pre><code class="loading" data-source="AGENTS.md">Loading full text…</code></pre>
+    </section>
+
+    <section class="panel document" id="build-rules" data-document="BUILD-RULES.md">
+      <div class="document-head">
+        <div class="document-title">
+          <p>Full text / stable rules</p>
+          <h3>BUILD-RULES.md</h3>
+          <p class="scroll-hint">Scroll full text ↓</p>
+        </div>
+        <div class="document-actions">
+          <button class="small-button copy" type="button" data-copy="BUILD-RULES.md">Copy full text</button>
+          <a class="small-button" href="BUILD-RULES.md" download>Download .md</a>
+        </div>
+      </div>
+      <pre><code class="loading" data-source="BUILD-RULES.md">Loading full text…</code></pre>
+    </section>
+
+    <section class="panel closing" aria-labelledby="closing-title">
+      <div>
+        <p class="section-label">Use it anywhere</p>
+        <h2 id="closing-title">Keep the method. Replace the project.</h2>
+        <p>Use the same rules with a new project contract, a new repository, or a different agent. Corrections, suggestions, and practical examples are welcome through GitHub.</p>
+      </div>
+      <div class="license-note">
+        <strong>Creative Commons Attribution 4.0 International</strong>
+        <p>You may share and adapt these materials for any purpose with attribution. See the full <a href="LICENSE">license text</a>. Suggested credit: “The Monument Method by Jason Fullner and CycleVault.ai, licensed under CC BY 4.0.” Identify when changes were made.</p>
+        <p>Created by Jason Fullner and CycleVault.ai. Shared through SolidStateIntelligence.ai.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    The Monument Method · The work becomes a reusable method · CC BY 4.0<br>
+    Created by Jason Fullner and CycleVault.ai · Shared through SolidStateIntelligence.ai.
+  </footer>
+
+  <script>
+    const cache = new Map();
+
+    async function loadText(file) {
+      if (!cache.has(file)) {
+        cache.set(file, fetch(file).then((response) => {
+          if (!response.ok) throw new Error(`Unable to load ${file}`);
+          return response.text();
+        }));
+      }
+      return cache.get(file);
+    }
+
+    function fallbackCopy(text) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const copied = document.execCommand("copy");
+      area.remove();
+      if (!copied) throw new Error("Copy was not available");
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return;
+        } catch {
+          // Local previews and embedded browsers may deny the modern API.
+        }
+      }
+      fallbackCopy(text);
+    }
+
+    async function hydrateDocuments() {
+      const blocks = [...document.querySelectorAll("[data-source]")];
+      await Promise.all(blocks.map(async (block) => {
+        const file = block.dataset.source;
+        try {
+          block.textContent = await loadText(file);
+          block.classList.remove("loading");
+        } catch (error) {
+          block.textContent = `${error.message}. Use the Download link above.`;
+        }
+        const hint = block.closest(".document")?.querySelector(".scroll-hint");
+        if (hint) hint.hidden = block.parentElement.scrollHeight <= block.parentElement.clientHeight + 1;
+      }));
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-copy]");
+      if (!button) return;
+
+      const original = "Copy full text";
+      try {
+        const text = await loadText(button.dataset.copy);
+        await copyText(text);
+        button.textContent = "Copied";
+        button.dataset.state = "copied";
+      } catch {
+        button.textContent = "Copy failed";
+      }
+
+      window.setTimeout(() => {
+        button.textContent = original;
+        delete button.dataset.state;
+      }, 1800);
+    });
+
+    hydrateDocuments();
+  </script>
+</body>
+</html>
