@@ -1,59 +1,46 @@
-# The Monument Method
+# Monument
 
-## The work becomes a reusable method.
+A starting kit for building something with AI agents without losing the plot.
 
-> **Markdown is the contract. Hashes bind it. Code serves it. Evidence proves
-> only the named claim. Stop on drift. The human reviews, approves, and opens
-> the next gate.**
+Long projects with agents drift: decisions get forgotten, scope creeps, and "done" means whatever the last message said. Monument is two plain Markdown files you drop into a project so the intent, the decisions and the proof live somewhere every person and every agent reads first.
 
-The Monument Method is a small, portable way to turn human intent into durable
-plans, bounded construction, and evidence that says exactly what it proves.
-It is designed for people working with AI agents, engineers, or both.
+## Start in five minutes
 
-The working protocol is:
+1. Copy [`PROJECT.md`](PROJECT.md) and [`BUILD-RULES.md`](BUILD-RULES.md) into your project.
+2. Fill in `PROJECT.md`: what you're building, for whom, what "done" looks like, and the next step you want.
+3. Point your agent at [`AGENTS.md`](AGENTS.md) and give it one small, bounded task.
+4. After each step, update `PROJECT.md`: what was decided, what was proven, what's next.
 
-> **READ → BIND → BUILD → PROVE → REVIEW**
+That's it. Add `docs/decisions`, `docs/plans` or `docs/evidence` only when the project gets too big to scan.
 
-The full method, copy controls, and individual or complete downloads are
-available from the repository landing page at `index.html`.
+## The loop
 
-## Start with two files
+**Read → plan one step → build it → prove it → you review → next step.**
 
-Copy these files into a new or existing project:
+- **Read** the project file before touching anything.
+- **Plan** one step small enough to check.
+- **Build** only that step.
+- **Prove** it with evidence that matches the claim (a test, a screenshot, a measurement), and say what it does *not* prove.
+- **Review**: a person approves before the next step starts.
 
-- [`BUILD-RULES.md`](BUILD-RULES.md) — the stable working rules;
-- [`PROJECT.md`](PROJECT.md) — the living project contract.
+## What it helps with
 
-The included [`AGENTS.md`](AGENTS.md) is intentionally small. It points agents
-to the two files instead of duplicating their instructions.
+- Decisions survive across long projects and new sessions.
+- Facts, decisions, guesses and proof stay separate.
+- Work stops when it drifts outside what was asked.
+- Someone else (or another agent) can pick the project up cold.
 
-Fill in `PROJECT.md`, then ask the agent to read `AGENTS.md` and begin with one
-bounded target. Keep decisions, evidence, limits, and the next human gate in
-the project contract as the work changes.
+A detailed plan isn't a correct plan. Monument keeps review and evidence as their own steps for that reason.
 
-## What it is for
+## Going further
 
-- preserving human decisions across long projects;
-- separating current facts, decisions, recommendations, unknowns, and proof;
-- stopping implementation when authority or scope drifts;
-- matching evidence to the exact claim being made;
-- giving another engineer or agent a durable place to resume.
-
-It does not make a plan correct merely because the plan is detailed, hashed,
-or complete-looking. Review and evidence remain separate gates.
-
-## Grow only when needed
-
-Start with the two Markdown files. Add `docs/decisions`, `docs/plans`, and
-`docs/evidence` only when the project becomes difficult to scan. Do not build a
-document bureaucracy before the work requires it.
+Once a project has repeating work (reviews, tests, releases), the same ideas scale up into a software factory: [Gas City](https://github.com/gastownhall/gascity) packs with formulas and human approval gates. [Building Three Keypress Sweeps for TUI Testing](https://cyclevault.ai/keypress-sweeps/) shows three factories measured on one job.
 
 ## Suggestions
 
-Corrections, suggestions, and practical examples are welcome through GitHub.
+Corrections and examples are welcome as issues or pull requests.
 
-Created by Jason Fullner and CycleVault.ai. Shared through
-SolidStateIntelligence.ai.
+Made by Jason Fullner, [CycleVault](https://cyclevault.ai).
 
 ## License
 

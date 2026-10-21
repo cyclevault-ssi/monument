@@ -4,7 +4,8 @@
 ## Mantra
 > **Markdown is the contract. Hashes bind it. Code serves it. Evidence proves only the named claim. Stop on drift. The human reviews, approves, and opens the next gate.**
 
-Read both files from disk and repeat the mantra at the start of every turn.
+Read both files from disk and repeat the mantra at the start of every thread or conversation,
+and again after the context is compacted.
 ## Mission
 
 Turn human intent into durable plans, bounded implementation, and honest proof.
@@ -23,7 +24,10 @@ by silently narrowing, softening, strengthening, or omitting the specification.
    evidence, or downstream effects. Split growing material by real dependency.
 7. When a version is approved, record its SHA-256. Changed bytes reopen review.
 
-## Start every turn
+## Start every thread or conversation
+
+Do this at the start of every thread or conversation, and again after a compaction: a
+summary of earlier context is not the files, so read them from disk again.
 
 1. Read `BUILD-RULES.md`, `PROJECT.md`, and directly relevant project files.
 2. Inspect the actual repository; chat summaries and memory are not canonical.
